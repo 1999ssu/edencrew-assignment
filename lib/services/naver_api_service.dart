@@ -3,13 +3,17 @@ import 'package:http/http.dart' as http;
 
 class NaverApiService {
   //검색어 종목 후보 조회 api
-  Future<dynamic> getQueryTargetStockData(String symbol) async {
-    final uri = Uri.parse(
-      'https://ac.stock.naver.com/ac',
-    ).replace(queryParameters: {'query': 'SERVICE_ITEM:$symbol'});
+  Future<dynamic> getSearchStock(String keyword) async {
+    final uri = Uri.parse('https://ac.stock.naver.com/ac').replace(
+      queryParameters: {
+        'q': keyword,
+
+        'target': 'stock,ipo,index,marketindicator',
+      },
+    );
     final response = await http.get(uri);
     if (response.statusCode != 200) {
-      throw Exception('검색어 종목 후보 조회 실패: ${response.statusCode}');
+      throw Exception('종목 검색 실패: ${response.statusCode}');
     }
     return jsonDecode(response.body);
   }
